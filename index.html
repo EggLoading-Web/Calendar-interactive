@@ -1,0 +1,2109 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#C08868" />
+<title>Calendario de Contenido · Michelle Art & Egg Loading</title>
+
+<!-- ============ FAVICON ============ -->
+<link rel="icon" type="image/png" href="favicon.png" />
+<link rel="apple-touch-icon" href="favicon.png" />
+
+<style>
+  :root {
+    --planificar: #9BAEC8;
+    --grabar: #D4937A;
+    --editar: #A99BC0;
+    --publicar: #9BB59B;
+    --comunidad: #D4B77A;
+    --descanso: #B5ADA6;
+  }
+
+  /* ============ TEMA CLARO (DÍA) ============ */
+  html[data-theme="light"], html:not([data-theme]) {
+    --bg-1: #FBF6F0;
+    --bg-2: #F5EBE1;
+    --surface: #FFFFFF;
+    --surface-soft: #FAF6F2;
+    --surface-hover: #F5EBE1;
+    --text: #3D2820;
+    --text-soft: #7A6355;
+    --text-muted: #A8917F;
+    --border: rgba(74,37,24,.08);
+    --border-strong: rgba(74,37,24,.15);
+    --accent: #B87B5D;
+    --accent-soft: #F0DCD0;
+    --accent-hover: #A06848;
+    --header-1: #E4A98D;
+    --header-2: #C08868;
+    --header-3: #9E6848;
+    --btn-bg: #FFFFFF;
+    --btn-text: #4A2518;
+    --btn-border: rgba(74,37,24,.1);
+    --btn-hover-bg: #F5EBE1;
+    --btn-active-bg: linear-gradient(135deg, #C08868 0%, #A06848 100%);
+    --btn-active-text: #FBF1EC;
+    --field-bg: #FAF6F2;
+    --field-focus: #FFFFFF;
+    --shadow: 0 4px 20px rgba(74,37,24,.06);
+    --shadow-hover: 0 8px 30px rgba(74,37,24,.12);
+    --note-bg: #FFFFFF;
+    --code-color: #7A8AA5;
+    --toggle-bg: rgba(255,255,255,.25);
+    --toggle-hover: rgba(255,255,255,.4);
+  }
+
+  /* ============ TEMA OSCURO (NOCHE) ============ */
+  html[data-theme="dark"] {
+    --bg-1: #1C1814;
+    --bg-2: #25201B;
+    --surface: #2A2420;
+    --surface-soft: #322B25;
+    --surface-hover: #3A322B;
+    --text: #F0E5DA;
+    --text-soft: #C4B4A4;
+    --text-muted: #8A7A6B;
+    --border: rgba(240,229,218,.08);
+    --border-strong: rgba(240,229,218,.15);
+    --accent: #E09A7B;
+    --accent-soft: #4A382D;
+    --accent-hover: #F0A98C;
+    --header-1: #4A3628;
+    --header-2: #35281E;
+    --header-3: #1F1915;
+    --btn-bg: #322B25;
+    --btn-text: #F0E5DA;
+    --btn-border: rgba(240,229,218,.12);
+    --btn-hover-bg: #3A322B;
+    --btn-active-bg: linear-gradient(135deg, #D4937A 0%, #B87B5D 100%);
+    --btn-active-text: #1F1915;
+    --field-bg: #322B25;
+    --field-focus: #3A322B;
+    --shadow: 0 4px 20px rgba(0,0,0,.25);
+    --shadow-hover: 0 8px 30px rgba(0,0,0,.4);
+    --note-bg: #322B25;
+    --code-color: #A8B8CC;
+    --toggle-bg: rgba(255,255,255,.08);
+    --toggle-hover: rgba(255,255,255,.15);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+
+  html, body {
+    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 100%);
+    background-attachment: fixed;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    width: 100%;
+    transition: background .4s ease, color .4s ease;
+  }
+
+  /* ============ HEADER ============ */
+  .header {
+    background: linear-gradient(135deg, var(--header-1) 0%, var(--header-2) 50%, var(--header-3) 100%);
+    color: #FBF1EC;
+    padding: 48px 24px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: background .4s ease;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(255,255,255,.15), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -150px; left: -80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(255,255,255,.1), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .header .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border: 1px solid rgba(251,241,236,.4);
+    border-radius: 999px;
+    margin-bottom: 20px;
+    opacity: .95;
+  }
+  .header h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(26px, 5vw, 46px);
+    font-weight: 400;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+    line-height: 1.15;
+    color: #FBF1EC;
+  }
+  .header p {
+    font-size: clamp(13px, 1.6vw, 15px);
+    opacity: .9;
+    max-width: 600px;
+    margin: 0 auto;
+    color: #FBF1EC;
+  }
+
+  /* ============ THEME TOGGLE ============ */
+  .theme-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+    background: var(--toggle-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(251,241,236,.3);
+    color: #FBF1EC;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-family: inherit;
+    transition: all .3s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover {
+    background: var(--toggle-hover);
+    transform: scale(1.08);
+  }
+  .theme-toggle .icon {
+    display: block;
+    transition: transform .4s ease;
+  }
+  html[data-theme="dark"] .theme-toggle .icon {
+    transform: rotate(180deg);
+  }
+
+  /* ============ STATS ============ */
+  .stats {
+    max-width: 1200px;
+    margin: -30px auto 0;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+  }
+  .stat {
+    background: var(--surface);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    min-width: 0;
+    border: 1px solid var(--border);
+    transition: all .3s ease;
+  }
+  .stat .num {
+    font-family: Georgia, serif;
+    font-size: clamp(22px, 3.5vw, 28px);
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat .lbl {
+    font-size: clamp(9px, 1.2vw, 11px);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-soft);
+    font-weight: 600;
+  }
+
+  /* ============ CONTROLS ============ */
+  .controls {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+  .filter-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    color: var(--btn-text);
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all .25s ease;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    letter-spacing: .2px;
+  }
+  .filter-btn:hover {
+    background: var(--btn-hover-bg);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+  .filter-btn.active {
+    background: var(--btn-active-bg);
+    color: var(--btn-active-text);
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(184,123,93,.25);
+  }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .action-btn {
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    color: var(--btn-text);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all .25s ease;
+    min-height: 42px;
+    white-space: nowrap;
+  }
+  .action-btn:hover {
+    background: var(--btn-hover-bg);
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  /* ============ LEYENDA ============ */
+  .legend {
+    max-width: 1200px;
+    margin: 20px auto 0;
+    padding: 0 24px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-soft);
+  }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .legend span::before {
+    content: '';
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--descanso);
+  }
+  .legend span.planificar::before { background: var(--planificar); }
+  .legend span.grabar::before { background: var(--grabar); }
+  .legend span.editar::before { background: var(--editar); }
+  .legend span.publicar::before { background: var(--publicar); }
+  .legend span.comunidad::before { background: var(--comunidad); }
+  .legend span.descanso::before { background: var(--descanso); }
+
+  /* ============ OBJETIVOS ============ */
+  .goals {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .goal-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    min-width: 0;
+    transition: all .3s ease;
+  }
+  .goal-card h3 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text);
+  }
+  .goal-card .who {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .goal-card ul { list-style: none; font-size: 13.5px; line-height: 1.7; }
+  .goal-card li {
+    padding-left: 20px;
+    position: relative;
+    color: var(--text);
+  }
+  .goal-card li::before {
+    content: '◆';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 10px; top: 5px;
+    opacity: .6;
+  }
+
+  /* ============ WEEK ============ */
+  .weeks {
+    max-width: 1200px;
+    margin: 40px auto 0;
+    padding: 0 24px 60px;
+  }
+  .week { margin-bottom: 40px; }
+  .week-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+  .week-title .num {
+    font-family: Georgia, serif;
+    font-size: clamp(20px, 3vw, 24px);
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .week-title .txt {
+    font-size: clamp(13px, 2vw, 15px);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .week-title .obj {
+    font-size: clamp(11px, 1.5vw, 12px);
+    color: var(--text-muted);
+    font-style: italic;
+  }
+  .week-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--text-soft);
+    flex-wrap: wrap;
+  }
+  .week-progress .bar {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    max-width: 240px;
+    min-width: 80px;
+  }
+  .week-progress .bar span {
+    display: block;
+    height: 100%;
+    background: var(--publicar);
+    transition: width .3s ease;
+  }
+
+  /* ============ GRID / CARD ============ */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    transition: all .3s ease;
+    overflow: hidden;
+    border-top: 3px solid transparent;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .card:hover { box-shadow: var(--shadow-hover); }
+  .card.planificar { border-top-color: var(--planificar); }
+  .card.grabar { border-top-color: var(--grabar); }
+  .card.editar { border-top-color: var(--editar); }
+  .card.publicar { border-top-color: var(--publicar); }
+  .card.comunidad { border-top-color: var(--comunidad); }
+  .card.descanso { border-top-color: var(--descanso); }
+
+  .card.done { opacity: .5; background: var(--surface-soft); }
+  .card.done .card-day,
+  .card.done .task-text {
+    text-decoration: line-through;
+    text-decoration-thickness: 1px;
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 18px 0;
+    gap: 10px;
+  }
+  .card-day {
+    font-family: Georgia, serif;
+    font-size: clamp(15px, 2vw, 17px);
+    font-weight: 700;
+    color: var(--text);
+  }
+  .card-day .date {
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+  .card-checkbox {
+    width: 26px;
+    height: 26px;
+    border: 2px solid var(--border-strong);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all .2s;
+    background: var(--surface);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .card-checkbox:hover { border-color: var(--accent); }
+  .card.done .card-checkbox {
+    background: var(--publicar);
+    border-color: var(--publicar);
+  }
+  .card-checkbox::after {
+    content: '✓';
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .card.done .card-checkbox::after { opacity: 1; }
+
+  .card-tag-wrap { padding: 6px 18px 12px; }
+  .card-tag {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: #fff;
+    opacity: .9;
+  }
+  .card.planificar .card-tag { background: var(--planificar); }
+  .card.grabar .card-tag { background: var(--grabar); }
+  .card.editar .card-tag { background: var(--editar); }
+  .card.publicar .card-tag { background: var(--publicar); }
+  .card.comunidad .card-tag { background: var(--comunidad); }
+  .card.descanso .card-tag { background: var(--descanso); }
+
+  .task { padding: 0 18px 10px; }
+  .task-who {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    opacity: .9;
+  }
+  .task-who.mica { background: rgba(212,147,122,.18); color: #C08063; }
+  .task-who.enri { background: rgba(155,174,200,.18); color: #7A92AD; }
+  .task-who.both { background: rgba(155,181,155,.18); color: #6E8A6E; }
+  html[data-theme="dark"] .task-who.mica { color: #E8B096; }
+  html[data-theme="dark"] .task-who.enri { color: #A8BBD1; }
+  html[data-theme="dark"] .task-who.both { color: #A8C4A8; }
+
+  .task-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text);
+    word-wrap: break-word;
+  }
+
+  .expand-btn {
+    background: var(--surface-soft);
+    border: none;
+    border-top: 1px solid var(--border);
+    color: var(--text-soft);
+    padding: 12px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: auto;
+    transition: background .2s;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .expand-btn:hover { background: var(--surface-hover); color: var(--text); }
+  .expand-btn .icon { font-size: 10px; transition: transform .3s; }
+  .card.expanded .expand-btn .icon { transform: rotate(180deg); }
+
+  .card-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease;
+    background: var(--surface-soft);
+  }
+  .card.expanded .card-details { max-height: 4000px; }
+  .details-inner { padding: 16px 18px 18px; }
+
+  .detail-block {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--border);
+  }
+  .detail-block:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .detail-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .detail-text {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+  .detail-text.hook {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--text);
+    padding: 10px 14px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+  .detail-text.copy {
+    padding: 10px 14px;
+    background: var(--note-bg);
+    border-radius: 6px;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+  }
+  .detail-text.hashtags {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--code-color);
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    padding: 10px 14px;
+    background: var(--note-bg);
+    border-radius: 6px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    margin-bottom: 12px;
+    color: var(--text-soft);
+  }
+  .meta-row span { display: inline-flex; align-items: center; gap: 6px; }
+
+  .notes {
+    width: 100%;
+    min-height: 70px;
+    padding: 10px 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 13px;
+    resize: vertical;
+    background: var(--note-bg);
+    color: var(--text);
+    line-height: 1.5;
+    transition: all .2s;
+  }
+  .notes::placeholder { color: var(--text-muted); }
+  .notes:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .notes-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+
+  /* ============ MÉTRICAS MEJORADAS ============ */
+  .metrics-section {
+    max-width: 1200px;
+    margin: 0 auto 40px;
+    padding: 0 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .metrics-card {
+    background: var(--surface);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--accent);
+  }
+  .metrics-card[data-person="mica"] {
+    border-top-color: var(--grabar);
+  }
+  .metrics-card[data-person="enri"] {
+    border-top-color: var(--planificar);
+  }
+  .metrics-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .metrics-who {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .metrics-card[data-person="mica"] .metrics-who {
+    color: var(--grabar);
+  }
+  .metrics-card[data-person="enri"] .metrics-who {
+    color: var(--planificar);
+  }
+  .metrics-pill {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .metrics-card[data-person="mica"] .metrics-pill {
+    background: rgba(212,147,122,.18);
+    color: #C08063;
+  }
+  .metrics-card[data-person="enri"] .metrics-pill {
+    background: rgba(155,174,200,.2);
+    color: #7A92AD;
+  }
+  html[data-theme="dark"] .metrics-card[data-person="mica"] .metrics-pill {
+    color: #E8B096;
+  }
+  html[data-theme="dark"] .metrics-card[data-person="enri"] .metrics-pill {
+    color: #A8BBD1;
+  }
+  .metrics-card h3 {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 0;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .metrics-card p {
+    font-size: 13px;
+    color: var(--text-soft);
+    margin-bottom: 20px;
+    margin-top: 8px;
+  }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .metric-input { display: flex; flex-direction: column; gap: 6px; }
+  .metric-input.metric-full {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--border);
+  }
+  .metric-input label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+  .metric-input input,
+  .metric-input textarea {
+    padding: 12px;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    background: var(--field-bg);
+    color: var(--text);
+    width: 100%;
+    min-width: 0;
+    transition: all .2s;
+  }
+  .metric-input textarea {
+    min-height: 70px;
+    resize: vertical;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .metric-input input::placeholder,
+  .metric-input textarea::placeholder {
+    color: var(--text-muted);
+  }
+  .metric-input input:focus,
+  .metric-input textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--field-focus);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* ============ FOOTER ============ */
+  .footer {
+    background: linear-gradient(135deg, var(--header-1) 0%, var(--header-3) 100%);
+    color: #FBF1EC;
+    padding: 40px 24px;
+    text-align: center;
+    transition: background .4s ease;
+  }
+  .footer h3 {
+    font-family: Georgia, serif;
+    font-size: clamp(17px, 2.5vw, 20px);
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: #FBF1EC;
+  }
+  .footer p { font-size: 13px; opacity: .85; margin-bottom: 4px; }
+  .footer .credit {
+    margin-top: 20px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    opacity: .7;
+  }
+  .footer .credit a { color: #F5D9C4; text-decoration: none; font-weight: 700; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .weeks { padding: 0 20px 50px; }
+    .goals, .metrics-section { padding: 0 20px; }
+  }
+  @media (max-width: 900px) {
+    .goals { grid-template-columns: 1fr; }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  }
+  @media (max-width: 768px) {
+    .header { padding: 36px 20px 32px; }
+    .theme-toggle { top: 14px; right: 14px; width: 40px; height: 40px; font-size: 16px; }
+    .stats { grid-template-columns: 1fr 1fr; padding: 0 20px; }
+    .controls { flex-direction: column; align-items: stretch; gap: 10px; margin-top: 24px; }
+    .filters, .actions { justify-content: center; width: 100%; }
+    .filter-btn, .action-btn { flex: 1 1 auto; min-width: 0; padding: 10px 14px; font-size: 12.5px; }
+    .actions { flex-wrap: wrap; }
+    .legend { justify-content: center; padding: 0 20px; gap: 12px; }
+    .weeks { padding: 0 20px 40px; margin-top: 28px; }
+    .week-title { flex-direction: column; gap: 4px; align-items: flex-start; }
+    .grid { grid-template-columns: 1fr; gap: 14px; }
+    .card-head { padding: 14px 16px 0; }
+    .card-tag-wrap { padding: 6px 16px 10px; }
+    .task { padding: 0 16px 10px; }
+    .details-inner { padding: 14px 16px 16px; }
+    .expand-btn { padding: 12px 16px; }
+    .goals { padding: 0 20px; margin-top: 24px; }
+    .metrics-section {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      padding: 0 20px;
+      margin-bottom: 32px;
+    }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 480px) {
+    .header { padding: 30px 16px 28px; }
+    .header .tag { font-size: 10px; letter-spacing: 3px; padding: 5px 14px; margin-bottom: 14px; }
+    .header h1 { margin-bottom: 8px; }
+    .theme-toggle { top: 12px; right: 12px; width: 38px; height: 38px; font-size: 15px; }
+    .stats { padding: 0 14px; gap: 8px; margin-top: -24px; }
+    .stat { padding: 14px 8px; border-radius: 8px; }
+    .stat .num { font-size: 20px; }
+    .stat .lbl { font-size: 9px; letter-spacing: 1px; }
+    .controls { padding: 0 14px; }
+    .filter-btn, .action-btn { padding: 10px 12px; font-size: 12px; min-height: 42px; }
+    .filters { gap: 6px; }
+    .actions { gap: 6px; }
+    .legend { padding: 0 14px; font-size: 11px; gap: 10px; }
+    .weeks { padding: 0 14px 32px; }
+    .week { margin-bottom: 32px; }
+    .goal-card { padding: 16px; }
+    .goal-card ul { font-size: 13px; }
+    .card { border-radius: 10px; }
+    .card-head { padding: 14px 14px 0; }
+    .card-day { font-size: 15px; }
+    .card-day .date { font-size: 10px; }
+    .card-tag-wrap { padding: 6px 14px 10px; }
+    .task { padding: 0 14px 10px; }
+    .task-text { font-size: 12.5px; }
+    .details-inner { padding: 12px 14px 14px; }
+    .expand-btn { padding: 12px 14px; font-size: 11px; }
+    .detail-text { font-size: 12.5px; }
+    .detail-text.hook { font-size: 13.5px; padding: 10px 12px; }
+    .detail-text.copy { font-size: 12px; padding: 10px 12px; }
+    .detail-text.hashtags { font-size: 11px; }
+    .meta-row { font-size: 11.5px; padding: 10px 12px; gap: 8px 12px; }
+    .notes { font-size: 12.5px; }
+    .metrics-section { padding: 0 14px; margin-bottom: 24px; }
+    .metrics-card { padding: 16px; }
+    .metrics-grid { grid-template-columns: 1fr; }
+    .footer { padding: 32px 16px; }
+    .footer h3 { font-size: 17px; }
+  }
+  @media (max-width: 380px) {
+    .header h1 { font-size: 22px; letter-spacing: -0.3px; }
+    .stats { grid-template-columns: 1fr 1fr; }
+    .filter-btn, .action-btn { font-size: 11.5px; padding: 9px 10px; }
+    .card-day { font-size: 14px; }
+    .card-day .date { display: block; margin-left: 0; margin-top: 2px; }
+    .week-title .num { font-size: 19px; }
+  }
+  @media (hover: none) {
+    .card:hover { box-shadow: var(--shadow); }
+    .filter-btn:hover, .action-btn:hover { transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+  @media print {
+    body { background: #fff; color: #333; }
+    .header {
+      background: #4A2518 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      padding: 20px 24px;
+    }
+    .header::before, .header::after { display: none; }
+    .theme-toggle, .controls, .actions, .card-checkbox, .expand-btn, .filters { display: none !important; }
+    .card-details { max-height: none !important; }
+    .card { page-break-inside: avoid; box-shadow: none; border: 1px solid rgba(74,37,24,.15); }
+    .week { page-break-inside: auto; }
+    .stats { margin-top: 20px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .metrics-section { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="Cambiar tema">
+    <span class="icon">🌙</span>
+  </button>
+  <div class="header-inner">
+    <span class="tag">Plan estratégico · 30 días</span>
+    <h1>Calendario de contenido</h1>
+    <p>Michelle Art & Egg Loading · Micaela y Enrique · Guiones, hooks, copies y hashtags listos para usar</p>
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="num" id="statTotal">0</div><div class="lbl">Tareas totales</div></div>
+  <div class="stat"><div class="num" id="statDone">0</div><div class="lbl">Completadas</div></div>
+  <div class="stat"><div class="num" id="statPending">0</div><div class="lbl">Pendientes</div></div>
+  <div class="stat"><div class="num" id="statProgress">0%</div><div class="lbl">Progreso</div></div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="filters">
+    <button class="filter-btn active" data-filter="all">Todo</button>
+    <button class="filter-btn" data-filter="mica">Solo Micaela</button>
+    <button class="filter-btn" data-filter="enri">Solo Enrique</button>
+  </div>
+  <div class="actions">
+    <button class="action-btn" onclick="expandAll()">⊞ Expandir</button>
+    <button class="action-btn" onclick="collapseAll()">⊟ Colapsar</button>
+    <button class="action-btn" onclick="window.print()">🖨️ Imprimir</button>
+    <button class="action-btn" onclick="exportProgress()">⬇ Exportar</button>
+    <button class="action-btn" onclick="document.getElementById('importFile').click()">⬆ Importar</button>
+    <button class="action-btn" onclick="resetAll()">↺ Reiniciar</button>
+    <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importProgress(event)">
+  </div>
+</div>
+
+<!-- LEYENDA -->
+<div class="legend">
+  <span class="planificar">Planificar</span>
+  <span class="grabar">Grabar</span>
+  <span class="editar">Editar</span>
+  <span class="publicar">Publicar</span>
+  <span class="comunidad">Comunidad</span>
+  <span class="descanso">Descanso</span>
+</div>
+
+<!-- OBJETIVOS -->
+<div class="goals">
+  <div class="goal-card">
+    <div class="who">Micaela · Michelle Art</div>
+    <h3>Objetivos del mes</h3>
+    <ul>
+      <li>+50 seguidores locales en Torino</li>
+      <li>1 mural contratado</li>
+      <li>1 colaboración con negocio local</li>
+      <li>1 taller online lanzado</li>
+      <li>Portfolio PDF enviado a 10 hoteles/restaurantes</li>
+    </ul>
+  </div>
+  <div class="goal-card">
+    <div class="who">Enrique · Egg Loading</div>
+    <h3>Objetivos del mes</h3>
+    <ul>
+      <li>+80 seguidores entre pymes y emprendedores</li>
+      <li>1 cliente web contratado</li>
+      <li>1 caso de estudio documentado</li>
+      <li>3 auditorías web gratuitas realizadas</li>
+      <li>Portfolio de servicios en PDF enviado a 20 pymes</li>
+    </ul>
+  </div>
+</div>
+
+<!-- WEEKS -->
+<div class="weeks">
+
+  <!-- SEMANA 1 -->
+  <div class="week">
+    <div class="week-title">
+      <span class="num">Semana 1</span>
+      <span class="txt">Reset & Presentación</span>
+      <span class="obj">— Darse a conocer, quiénes son y qué hacen</span>
+    </div>
+    <div class="week-progress">
+      <span>Progreso:</span>
+      <div class="bar"><span id="wp1"></span></div>
+      <span id="wpt1">0/7</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card planificar" data-person="both" data-id="d1">
+        <div class="card-head">
+          <div class="card-day">Lunes 1<span class="date">· Día 1</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Planificación semanal + stories con encuesta inicial.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Planificación semanal + stories con encuesta inicial.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">📊 Encuesta Micaela</div>
+            <div class="detail-text">Instagram Stories · 3 opciones con emoji:
+🎨 Tattoo
+🖼️ Mural
+✏️ Cuadro
+Pregunta: "¿Qué querés ver más esta semana?"</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📊 Encuesta Enrique</div>
+            <div class="detail-text">Instagram Stories · encuesta binaria:
+"¿Tu negocio tiene página web propia?"
+✅ Sí · ❌ No (y quiero una)</div>
+          </div>
+          <div class="meta-row">
+            <span>⏰ Stories: 10:00 y 19:00</span>
+            <span>📊 Medir: cantidad de respuestas</span>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Ideas, ajustes, referencias..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="mica" data-id="d2m">
+        <div class="card-head">
+          <div class="card-day">Martes 2<span class="date">· Día 2</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Grabar presentación + 2 procesos (tattoo o mural).</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"Soy argentina, artista, y me mudé a Torino para empezar de cero."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">Mostrar manos trabajando, estudio, obra, calle.
+VO: "Hago tatuajes, murales, cuadros y talleres. Mi arte es mi forma de hablar."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎯 CTA</div>
+            <div class="detail-text">"Si estás en Torino y querés un tatuaje o mural, escribime. Si estás lejos, quedate que hay arte para rato."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">Sono argentina, artista visiva e vivo a Torino. 🎨
+Realizzo tatuaggi, murales, quadri e laboratori d'arte.
+Se sei a Torino e vuoi lavorare insieme, scrivimi in DM.
+
+——
+Soy Micaela, artista argentina en Torino.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🏷️ Hashtags</div>
+            <div class="detail-text hashtags">#tatuajetorino #tattootorino #artistatorino #arteargentino #muralestorino #torinoart #tattooitalia</div>
+          </div>
+          <div class="meta-row">
+            <span>⏰ 12:00 o 19:00</span>
+            <span>📊 Retención 3s > 60%</span>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Ideas, ajustes..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="enri" data-id="d3e">
+        <div class="card-head">
+          <div class="card-day">Miércoles 3<span class="date">· Día 3</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Grabar presentación + 2 pantallas (web lenta vs rápida).</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"Tu negocio no necesita más Instagram. Necesita una web que venda."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">Mostrar pantalla con web lenta vs rápida.
+VO: "Soy Enrique, dev freelance en Torino. Ayudo a pymes a tener webs que convierten visitas en clientes."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎯 CTA</div>
+            <div class="detail-text">"Comentá WEB y te mando un checklist gratis."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">Tu negocio no necesita más Instagram. Necesita una web que convierta. 💻
+
+Soy Enrique, desarrollador freelance en Torino. Ayudo a pymes a tener una web rápida, optimizada y que vende.
+
+👉 Comentá WEB para checklist gratuito.
+
+Link en bio · eggloading--web.pages.dev</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🏷️ Hashtags</div>
+            <div class="detail-text hashtags">#paginasweb #desarrolloweb #pymeweb #webdesignitalia #freelancedev #sitiowebtorino #landingpage</div>
+          </div>
+          <div class="meta-row">
+            <span>⏰ 12:00 o 19:00</span>
+            <span>📊 Comentarios con "WEB"</span>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Ideas, ajustes..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card editar" data-person="both" data-id="d4">
+        <div class="card-head">
+          <div class="card-day">Jueves 4<span class="date">· Día 4</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Editar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Editar los reels grabados. Subtítulos automáticos con CapCut.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Checklist</div>
+            <div class="detail-text">✓ Subtítulos automáticos (CapCut)
+✓ Música trending al 30% de volumen
+✓ Transiciones cortas (0.2s)
+✓ Texto grande en pantalla (40px+)
+✓ Portada manual
+✓ Formato 9:16 (1080×1920)</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Detalles de edición..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card publicar" data-person="both" data-id="d5">
+        <div class="card-head">
+          <div class="card-day">Viernes 5<span class="date">· Día 5</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Publicar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Reel presentación + stories con detrás de escena.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel presentación + stories con encuesta.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Estrategia</div>
+            <div class="detail-text">Publicar AMBOS reels entre 12:00 y 19:00.
+Responder TODOS los comentarios en la primera hora.
+Compartir en stories 2h después.
+Responder DMs con voz si es posible.</div>
+          </div>
+          <div class="meta-row">
+            <span>⏰ 12:00 Micaela</span>
+            <span>⏰ 19:00 Enrique</span>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Cómo fue el lanzamiento..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card publicar" data-person="both" data-id="d6">
+        <div class="card-head">
+          <div class="card-day">Sábado 6<span class="date">· Día 6</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Publicar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Reel proceso + comentar en grupos de Torino.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel antes/después + comentar en 10 cuentas pyme.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook Micaela</div>
+            <div class="detail-text hook">"Esto era un boceto hace 3 horas. Mirá en qué terminó."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook Enrique</div>
+            <div class="detail-text hook">"Esta web tardaba 8 segundos en cargar. Perdía clientes todos los días."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy Micaela</div>
+            <div class="detail-text copy">Da un bozzetto a un'opera finita. 🎨
+Ogni progetto nasce da un dialogo con il cliente.
+Se vuoi un pezzo così, scrivimi in DM.
+
+#tatuajetorino #tattooproceso #timelapse</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy Enrique</div>
+            <div class="detail-text copy">Una web rápida = más clientes. 💻
+
+Optimicé una web de 8s a 2s:
+→ Imágenes comprimidas
+→ Cache activado
+→ Plugins innecesarios eliminados
+
+¿Tu web tarda más de 3s? Escribime.
+
+#weboptimization #pymeweb #seo</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Grupos donde comentar..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card descanso" data-person="both" data-id="d7">
+        <div class="card-head">
+          <div class="card-day">Domingo 7<span class="date">· Día 7</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Descanso</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Descanso + revisar métricas y anotar aprendizajes.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">📊 Revisar</div>
+            <div class="detail-text">✓ ¿Cuál reel tuvo más retención?
+✓ ¿Qué hook funcionó mejor?
+✓ ¿Cuántos DMs nuevos?
+✓ ¿Cuántos seguidores nuevos?
+✓ ¿Qué formato repetir?</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Aprendizajes..."></textarea>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEMANA 2 -->
+  <div class="week">
+    <div class="week-title">
+      <span class="num">Semana 2</span>
+      <span class="txt">Autoridad</span>
+      <span class="obj">— Tips, errores comunes, conocimiento real</span>
+    </div>
+    <div class="week-progress">
+      <span>Progreso:</span>
+      <div class="bar"><span id="wp2"></span></div>
+      <span id="wpt2">0/7</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card planificar" data-person="both" data-id="d8">
+        <div class="card-head">
+          <div class="card-day">Lunes 8<span class="date">· Día 8</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Planificar 2 tips de arte + 1 detrás de escena.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Planificar 3 errores web + 1 herramienta gratis.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">📝 Planificar</div>
+            <div class="detail-text">Micaela: 3 tips sobre empezar a dibujar + detrás de escena.
+Enrique: 3 errores típicos en webs + herramienta gratis.</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Ideas para los tips..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="mica" data-id="d9m">
+        <div class="card-head">
+          <div class="card-day">Martes 9<span class="date">· Día 9</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Tips dibujo + proceso cuadro.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"Se sempre hai voluto disegnare ma non sai da dove iniziare, guarda questo."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">3 tips rápidos con demo:
+1. Empezá con formas simples
+2. No borres hasta terminar la estructura
+3. Practicá 10 minutos todos los días</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎯 CTA</div>
+            <div class="detail-text">"Salva questo per la tua prossima pratica."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">3 consigli per iniziare a disegnare (anche da zero). ✏️
+
+1. Parti da forme semplici
+2. Non cancellare finché non hai finito la struttura
+3. Pratica 10 minuti al giorno
+
+Salva questo post.
+
+#tipsdearte #aprenderadibujar #artedigital</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🏷️ Hashtags</div>
+            <div class="detail-text hashtags">#tipsdearte #aprenderadibujar #artedigital #artistatorino #talleresdearte #dibujoprincipiantes</div>
+          </div>
+          <div class="meta-row">
+            <span>⏰ 12:00 o 19:00</span>
+            <span>📊 Guardados</span>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="enri" data-id="d10e">
+        <div class="card-head">
+          <div class="card-day">Miércoles 10<span class="date">· Día 10</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Errores pyme + PageSpeed.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"3 errores que veo en el 90% de las webs de pymes."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">Error 1: Sin WhatsApp visible arriba
+Error 2: Tardan +3s en cargar
+Error 3: Sin CTA claro
+Mostrar cada uno con ejemplo real.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎯 CTA</div>
+            <div class="detail-text">"¿Tu web tiene alguno? Comentá cuál."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">3 errores que veo TODOS los días en webs de pymes: 💻
+
+❌ Sin WhatsApp visible
+❌ Tarda más de 3s
+❌ Sin CTA claro
+
+¿Tu web tiene alguno? Comentá cuál 👇
+
+#paginasweb #pymeweb #desarrolloweb</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🏷️ Hashtags</div>
+            <div class="detail-text hashtags">#erroresweb #pymeweb #webdesign #seo #marketingdigital #desarrolloweb</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card editar" data-person="both" data-id="d11">
+        <div class="card-head">
+          <div class="card-day">Jueves 11<span class="date">· Día 11</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Editar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Editar todos los reels de la semana.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card publicar" data-person="both" data-id="d12">
+        <div class="card-head">
+          <div class="card-day">Viernes 12<span class="date">· Día 12</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Publicar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Reel tips de dibujo + stories.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel 3 errores web + stories.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card comunidad" data-person="both" data-id="d13">
+        <div class="card-head">
+          <div class="card-day">Sábado 13<span class="date">· Día 13</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Comunidad</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Colaborar con artista local + publicar resultado.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel herramienta gratis + comentar en LinkedIn.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy Enrique</div>
+            <div class="detail-text copy">Herramienta GRATIS para saber si tu web carga rápido ⚡
+
+Google PageSpeed Insights.
+Pegás tu URL y en 10 segundos te dice qué mejorar.
+
+Link: pagespeed.web.dev
+
+#herramientasweb #pagespeed #webdeveloper</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Cuentas contactadas, respuestas..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card descanso" data-person="both" data-id="d14">
+        <div class="card-head">
+          <div class="card-day">Domingo 14<span class="date">· Día 14</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Descanso</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Descanso + métricas.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEMANA 3 -->
+  <div class="week">
+    <div class="week-title">
+      <span class="num">Semana 3</span>
+      <span class="txt">Prueba social & Comunidad</span>
+      <span class="obj">— Resultados reales, conectar con la audiencia</span>
+    </div>
+    <div class="week-progress">
+      <span>Progreso:</span>
+      <div class="bar"><span id="wp3"></span></div>
+      <span id="wpt3">0/7</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card planificar" data-person="both" data-id="d15">
+        <div class="card-head">
+          <div class="card-day">Lunes 15<span class="date">· Día 15</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Cliente real, encuesta, sorteo pequeño.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Caso estudio real + oferta auditoría gratis.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="mica" data-id="d16m">
+        <div class="card-head">
+          <div class="card-day">Martes 16<span class="date">· Día 16</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Mural terminado + historia del cliente.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"Questo murale non esisteva 5 giorni fa."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">Before/after del mural.
+Boceto → ejecución → resultado.
+Hablar del cliente: quién es, qué quería, cómo se sintió.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎯 CTA</div>
+            <div class="detail-text">"Hai uno spazio che ha bisogno di arte? Scrivimi."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">Questo murale non esisteva 5 giorni fa. 🎨
+
+Un progetto nato da un dialogo con il cliente: ascoltare, capire lo spazio, trovare il linguaggio giusto.
+
+Se hai uno spazio che merita di essere trasformato, scrivimi in DM.
+
+#muralestorino #murales #artistatorino #arteurbanotorino</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Detalles del cliente..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="enri" data-id="d17e">
+        <div class="card-head">
+          <div class="card-day">Miércoles 17<span class="date">· Día 17</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Caso de éxito + demo auditoría.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook</div>
+            <div class="detail-text hook">"Así ayudé a un negocio a duplicar sus consultas por web."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📝 Guion</div>
+            <div class="detail-text">Problema → solución → resultado.
+Mostrar capturas de analytics.
+Explicar los 3 cambios clave.</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy</div>
+            <div class="detail-text copy">De 20 a 47 consultas mensuales en 3 meses. 📈
+
+Lo que hicimos:
+→ Rediseño de landing
+→ Formulario WhatsApp
+→ SEO local
+
+Si querés auditar tu web gratis, escribime AUDITORÍA.
+
+#casodeexito #webdesign #pymeweb #seoitalia</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Datos del caso..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card editar" data-person="both" data-id="d18">
+        <div class="card-head">
+          <div class="card-day">Jueves 18<span class="date">· Día 18</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Editar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Editar todos los reels de la semana.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card publicar" data-person="both" data-id="d19">
+        <div class="card-head">
+          <div class="card-day">Viernes 19<span class="date">· Día 19</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Publicar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Reel mural terminado + stories.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel caso de éxito + stories.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card comunidad" data-person="both" data-id="d20">
+        <div class="card-head">
+          <div class="card-day">Sábado 20<span class="date">· Día 20</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Comunidad</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Sorteo print/miniatura + contactar 3 hoteles/restaurantes.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Publicar testimonio + contactar 3 pymes locales.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎁 Sorteo Micaela</div>
+            <div class="detail-text">Premio: 1 print firmado o miniatura.
+Mecánica:
+1. Seguir la cuenta
+2. Etiquetar 2 amigos
+3. Comentar qué te gusta del arte
+Duración: 5 días.</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Contactos enviados..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card descanso" data-person="both" data-id="d21">
+        <div class="card-head">
+          <div class="card-day">Domingo 21<span class="date">· Día 21</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Descanso</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Descanso + métricas.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEMANA 4 -->
+  <div class="week">
+    <div class="week-title">
+      <span class="num">Semana 4</span>
+      <span class="txt">Conversión</span>
+      <span class="obj">— Convertir seguidores en clientes</span>
+    </div>
+    <div class="week-progress">
+      <span>Progreso:</span>
+      <div class="bar"><span id="wp4"></span></div>
+      <span id="wpt4">0/9</span>
+    </div>
+
+    <div class="grid">
+
+      <div class="card planificar" data-person="both" data-id="d22">
+        <div class="card-head">
+          <div class="card-day">Lunes 22<span class="date">· Día 22</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">CTA tattoo/mural + taller online.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Oferta auditoría gratis + demo servicio.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="both" data-id="d23">
+        <div class="card-head">
+          <div class="card-day">Martes 23<span class="date">· Día 23</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">"3 turnos disponibles este mes" + diseños.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">"Te audito tu web gratis esta semana".</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook Micaela</div>
+            <div class="detail-text hook">"Ho 3 slot disponibili per tatuaggi a Torino questo mese."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">🎬 Hook Enrique</div>
+            <div class="detail-text hook">"Esta semana audito tu web gratis. Solo 5 lugares."</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">📱 Copy Enrique</div>
+            <div class="detail-text copy">Esta semana audito tu web GRATIS. 💻
+
+Qué incluye:
+✓ Análisis de velocidad
+✓ Revisión de CTA
+✓ Recomendaciones concretas
+
+Solo 5 lugares. Comentá AUDITORÍA 👇
+
+#auditoriaweb #webdesign #pymeweb</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card grabar" data-person="both" data-id="d24">
+        <div class="card-head">
+          <div class="card-day">Miércoles 24<span class="date">· Día 24</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Grabar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Antes/después + testimonio cliente.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Proceso de trabajo + CTA.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card editar" data-person="both" data-id="d25">
+        <div class="card-head">
+          <div class="card-day">Jueves 25<span class="date">· Día 25</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Editar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Editar todos los reels de la semana.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card publicar" data-person="both" data-id="d26">
+        <div class="card-head">
+          <div class="card-day">Viernes 26<span class="date">· Día 26</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Publicar</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Reel CTA tattoo + stories con disponibilidad.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Reel oferta auditoría + stories con CTA.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card comunidad" data-person="both" data-id="d27">
+        <div class="card-head">
+          <div class="card-day">Sábado 27<span class="date">· Día 27</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Comunidad</span></div>
+        <div class="task"><span class="task-who mica">Micaela</span><div class="task-text">Repartir folletos en Torino + publicar resultado.</div></div>
+        <div class="task"><span class="task-who enri">Enrique</span><div class="task-text">Publicar resultado auditoría + repartir folletos.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="detail-block">
+            <div class="detail-label">📍 Zonas</div>
+            <div class="detail-text">Micaela: bares, peluquerías, centros culturales, ferias de arte.
+Enrique: coworkings, centros comerciales, cámaras de comercio.</div>
+          </div>
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Zonas, cantidad repartida..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card descanso" data-person="both" data-id="d28">
+        <div class="card-head">
+          <div class="card-day">Domingo 28<span class="date">· Día 28</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Descanso</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Descanso + métricas del mes.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card planificar" data-person="both" data-id="d29">
+        <div class="card-head">
+          <div class="card-day">Lunes 29<span class="date">· Día 29</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Analizar qué funcionó + duplicar formato ganador.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Qué funcionó mejor..."></textarea>
+        </div></div>
+      </div>
+
+      <div class="card planificar" data-person="both" data-id="d30">
+        <div class="card-head">
+          <div class="card-day">Martes 30<span class="date">· Día 30</span></div>
+          <div class="card-checkbox" onclick="toggleDone(this)"></div>
+        </div>
+        <div class="card-tag-wrap"><span class="card-tag">Planificar</span></div>
+        <div class="task"><span class="task-who both">Ambos</span><div class="task-text">Planificar mes 2 con metas nuevas.</div></div>
+        <button class="expand-btn" onclick="toggleExpand(this)"><span>Ver guion completo</span><span class="icon">▼</span></button>
+        <div class="card-details"><div class="details-inner">
+          <div class="notes-label">📝 Notas</div>
+          <textarea class="notes" placeholder="Metas del mes 2..."></textarea>
+        </div></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- MÉTRICAS -->
+<div class="metrics-section">
+
+  <!-- MÉTRICAS MICAELA -->
+  <div class="metrics-card" data-person="mica">
+    <div class="metrics-head">
+      <div>
+        <div class="metrics-who">Micaela · Michelle Art</div>
+        <h3>📊 Métricas semanales</h3>
+      </div>
+      <div class="metrics-pill">Artista</div>
+    </div>
+    <p>Anotá los números cada domingo. Comparar semana a semana te ayuda a saber qué repetir.</p>
+    <div class="metrics-grid">
+      <div class="metric-input">
+        <label>Seguidores nuevos</label>
+        <input type="number" placeholder="0" data-metric="mica-followers">
+      </div>
+      <div class="metric-input">
+        <label>Alcance total</label>
+        <input type="number" placeholder="0" data-metric="mica-reach">
+      </div>
+      <div class="metric-input">
+        <label>DMs recibidos</label>
+        <input type="number" placeholder="0" data-metric="mica-dms">
+      </div>
+      <div class="metric-input">
+        <label>Consultas / encargos</label>
+        <input type="number" placeholder="0" data-metric="mica-leads">
+      </div>
+      <div class="metric-input">
+        <label>Tattoo / mural / cuadro vendidos</label>
+        <input type="number" placeholder="0" data-metric="mica-sales">
+      </div>
+      <div class="metric-input">
+        <label>Reel top del mes</label>
+        <input type="text" placeholder="Ej: Proceso tattoo" data-metric="mica-topreel">
+      </div>
+    </div>
+    <div class="metric-input metric-full">
+      <label>Notas de la semana</label>
+      <textarea class="notes" data-metric="mica-notes" placeholder="Qué funcionó, qué no, ideas para la próxima..."></textarea>
+    </div>
+  </div>
+
+  <!-- MÉTRICAS ENRIQUE -->
+  <div class="metrics-card" data-person="enri">
+    <div class="metrics-head">
+      <div>
+        <div class="metrics-who">Enrique · Egg Loading</div>
+        <h3>📊 Métricas semanales</h3>
+      </div>
+      <div class="metrics-pill">Dev</div>
+    </div>
+    <p>Anotá los números cada domingo. Comparar semana a semana te ayuda a saber qué repetir.</p>
+    <div class="metrics-grid">
+      <div class="metric-input">
+        <label>Seguidores nuevos</label>
+        <input type="number" placeholder="0" data-metric="enri-followers">
+      </div>
+      <div class="metric-input">
+        <label>Alcance total</label>
+        <input type="number" placeholder="0" data-metric="enri-reach">
+      </div>
+      <div class="metric-input">
+        <label>DMs recibidos</label>
+        <input type="number" placeholder="0" data-metric="enri-dms">
+      </div>
+      <div class="metric-input">
+        <label>Leads / consultas web</label>
+        <input type="number" placeholder="0" data-metric="enri-leads">
+      </div>
+      <div class="metric-input">
+        <label>Clientes cerrados</label>
+        <input type="number" placeholder="0" data-metric="enri-clients">
+      </div>
+      <div class="metric-input">
+        <label>Reel top del mes</label>
+        <input type="text" placeholder="Ej: Antes/Después web" data-metric="enri-topreel">
+      </div>
+    </div>
+    <div class="metric-input metric-full">
+      <label>Notas de la semana</label>
+      <textarea class="notes" data-metric="enri-notes" placeholder="Qué funcionó, qué no, ideas para la próxima..."></textarea>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <h3>Michelle Art & Egg Loading</h3>
+  <p>Micaela Melon · Enrique Oviedo · Torino, Italia</p>
+  <p style="margin-top:12px;">3-4 publicaciones semanales · Stories diarias · Revisión cada domingo</p>
+  <div class="credit">Plan creado por <a href="https://eggloading--web.pages.dev" target="_blank">Egg Loading</a></div>
+</footer>
+
+<script>
+  // ============ STORAGE KEYS ============
+  const STORAGE_KEY = 'calendario_content_v2';
+  const METRICS_KEY = 'calendario_metrics_v2';
+  const NOTES_KEY = 'calendario_notes_v2';
+  const THEME_KEY = 'calendario_theme';
+
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+  let metrics = JSON.parse(localStorage.getItem(METRICS_KEY) || '{}');
+  let notes = JSON.parse(localStorage.getItem(NOTES_KEY) || '{}');
+
+  // ============ TEMA DÍA/NOCHE ============
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem(THEME_KEY, theme);
+    const icon = document.querySelector('.theme-toggle .icon');
+    if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme') || 'light';
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  (function initTheme() {
+    const saved = localStorage.getItem(THEME_KEY);
+    if (saved) {
+      setTheme(saved);
+    } else {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  })();
+
+  // ============ TOGGLE DONE ============
+  function toggleDone(el) {
+    const card = el.closest('.card');
+    const id = card.dataset.id;
+    card.classList.toggle('done');
+    state[id] = card.classList.contains('done');
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateStats();
+    updateWeekProgress();
+  }
+
+  // ============ EXPAND/COLLAPSE ============
+  function toggleExpand(btn) { btn.closest('.card').classList.toggle('expanded'); }
+  function expandAll() { document.querySelectorAll('.card').forEach(c => c.classList.add('expanded')); }
+  function collapseAll() { document.querySelectorAll('.card').forEach(c => c.classList.remove('expanded')); }
+
+  // ============ APLICAR ESTADO GUARDADO ============
+  document.querySelectorAll('.card').forEach(card => {
+    if (state[card.dataset.id]) card.classList.add('done');
+    const notesArea = card.querySelector('.notes');
+    if (notesArea && notes[card.dataset.id]) notesArea.value = notes[card.dataset.id];
+    if (notesArea) {
+      notesArea.addEventListener('input', () => {
+        notes[card.dataset.id] = notesArea.value;
+        localStorage.setItem(NOTES_KEY, JSON.stringify(notes));
+      });
+    }
+  });
+
+  // Métricas y notas de métricas (todas usan data-metric)
+  document.querySelectorAll('[data-metric]').forEach(input => {
+    const key = input.dataset.metric;
+    if (metrics[key]) input.value = metrics[key];
+    input.addEventListener('input', () => {
+      metrics[key] = input.value;
+      localStorage.setItem(METRICS_KEY, JSON.stringify(metrics));
+    });
+  });
+
+  // ============ STATS ============
+  function updateStats() {
+    const cards = document.querySelectorAll('.card');
+    const total = cards.length;
+    const done = document.querySelectorAll('.card.done').length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statPending').textContent = total - done;
+    document.getElementById('statProgress').textContent =
+      (total ? Math.round((done / total) * 100) : 0) + '%';
+  }
+
+  function updateWeekProgress() {
+    const weeks = document.querySelectorAll('.week');
+    weeks.forEach((week, i) => {
+      const n = i + 1;
+      const cards = week.querySelectorAll('.card');
+      const done = week.querySelectorAll('.card.done').length;
+      const pct = cards.length ? (done / cards.length) * 100 : 0;
+      const bar = document.getElementById('wp' + n);
+      const txt = document.getElementById('wpt' + n);
+      if (bar) bar.style.width = pct + '%';
+      if (txt) txt.textContent = done + '/' + cards.length;
+    });
+  }
+
+  // ============ FILTROS ============
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+      document.querySelectorAll('.card').forEach(card => {
+        const p = card.dataset.person;
+        const show = filter === 'all' || p === filter || p === 'both';
+        card.style.display = show ? '' : 'none';
+      });
+      document.querySelectorAll('.metrics-card').forEach(mc => {
+        const p = mc.dataset.person;
+        const show = filter === 'all' || p === filter;
+        mc.style.display = show ? '' : 'none';
+      });
+    });
+  });
+
+  // ============ RESET ============
+  function resetAll() {
+    if (!confirm('¿Reiniciar todo el progreso, notas y métricas?')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(METRICS_KEY);
+    localStorage.removeItem(NOTES_KEY);
+    location.reload();
+  }
+
+  // ============ EXPORT ============
+  function exportProgress() {
+    const data = { state, notes, metrics, exportedAt: new Date().toISOString() };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'calendario-progreso-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ============ IMPORT ============
+  function importProgress(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (data.state) localStorage.setItem(STORAGE_KEY, JSON.stringify(data.state));
+        if (data.notes) localStorage.setItem(NOTES_KEY, JSON.stringify(data.notes));
+        if (data.metrics) localStorage.setItem(METRICS_KEY, JSON.stringify(data.metrics));
+        alert('Progreso importado. La página se va a recargar.');
+        location.reload();
+      } catch (err) {
+        alert('Error al importar. Asegurate de que sea un JSON exportado desde este calendario.');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ============ INIT ============
+  updateStats();
+  updateWeekProgress();
+</script>
+</body>
+</html>
